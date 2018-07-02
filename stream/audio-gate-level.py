@@ -1,4 +1,4 @@
-# Silvius microphone audio gate tool 
+# Silvius microphone audio gate tool
 __author__ = 'dwk'
 
 import argparse
@@ -9,15 +9,15 @@ class MikeLevels:
     def __init__(self, mic):
         self.mic = mic
         self.chunk = 0
-        self.byterate = 16000
+        self.byterate = 32000
 
     def run_test(self):
         import pyaudio
         import audioop
         pa = pyaudio.PyAudio()
         sample_rate = self.byterate
-        stream = None 
-        
+        stream = None
+
         while stream is None:
             try:
                 # try adjusting this if you want fewer network packets
@@ -46,7 +46,7 @@ class MikeLevels:
                 global fatal_error
                 fatal_error = True
                 sys.exit(0)
-     
+
         print >> sys.stderr, "\nLISTENING TO MICROPHONE"
         last_state = None
         while True:
@@ -64,7 +64,7 @@ def setup():
     run(args)
 
 def run(args):
-    a = MikeLevels(args.device)    
+    a = MikeLevels(args.device)
     a.run_test()
 
 def main():

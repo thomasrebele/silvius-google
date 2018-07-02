@@ -73,13 +73,14 @@ class CoreParser(GenericParser):
 
     def p_number_rule(self, args):
         '''
-            number_rule ::= number _number
+            number_rule ::= _number
         '''
-        return AST('char', [ chr(ord('0') + args[1]) ])
+        return AST('char', [ chr(ord('0') + args[0]) ])
 
     def p__number(self, args):
         '''
             _number ::= zero
+            _number ::= cyril
             _number ::= one
             _number ::= two
             _number ::= three
@@ -105,6 +106,7 @@ class CoreParser(GenericParser):
         #    self.__doc__ += "number ::= " + v
         value = {
             'zero'  : 0,
+            'cyril'  : 0,
             'one'   : 1,
             'two'   : 2,
             'three' : 3,
@@ -139,29 +141,38 @@ class CoreParser(GenericParser):
         '''
             letter ::= arch
             letter ::= bravo
+            letter ::= boy
             letter ::= charlie
+            letter ::= can
             letter ::= delta
             letter ::= eco
             letter ::= echo
             letter ::= fox
             letter ::= golf
+            letter ::= gold
             letter ::= hotel
             letter ::= india
             letter ::= julia
             letter ::= kilo
             letter ::= line
             letter ::= mike
+            letter ::= nor
             letter ::= november
             letter ::= oscar
             letter ::= papa
             letter ::= queen
-            letter ::= romeo
+            letter ::= roll
+            letter ::= role
+            letter ::= row
             letter ::= sierra
             letter ::= tango
             letter ::= uniform
+            letter ::= uni
+            letter ::= unique
             letter ::= victor
             letter ::= whiskey
             letter ::= whisky
+            letter ::= why
             letter ::= xray
             letter ::= expert
             letter ::= yankee
@@ -173,6 +184,8 @@ class CoreParser(GenericParser):
     def p_character(self, args):
         '''
             character ::= act
+            character ::= flight
+            character ::= flights
             character ::= colon
             character ::= semicolon
             character ::= single quote
@@ -203,10 +216,18 @@ class CoreParser(GenericParser):
             character ::= question
             character ::= calm
             character ::= comma
+            character ::= karma
             character ::= ,
+            character ::= small
+            character ::= large
+            character ::= let's
+            character ::= next
+            character ::= prior
         '''
         value = {
             'act'   : 'Escape',
+            'flight'   : 'Escape',
+            'flights'   : 'Escape',
             'colon' : 'colon',
             'semicolon' : 'semicolon',
             'single': 'apostrophe',
@@ -237,17 +258,25 @@ class CoreParser(GenericParser):
             'question': 'question',
             'calm': 'comma',
             'comma': 'comma',
-            ',': 'comma'
+            ',': 'comma',
+            'karma': 'comma',
+            'small': 'less',
+            'let\'s': 'less',
+            'large': 'greater',
+            'next': 'Next',
+            'prior': 'Prior'
         }
         return AST('raw_char', [ value[args[0].type] ])
 
     def p_editing(self, args):
         '''
             editing ::= slap        repeat
+            editing ::= snow        repeat
             editing ::= scratch     repeat
         '''
         value = {
             'slap'  : 'Return',
+            'snow'  : 'Return',
             'scratch': 'BackSpace'
         }
         if args[1] != None:
@@ -262,11 +291,13 @@ class CoreParser(GenericParser):
             modifiers ::= control single_command
             modifiers ::= alt single_command
             modifiers ::= alternative single_command
+            modifiers ::= when single_command
         '''
         value = {
             'control' : 'ctrl',
             'alt' : 'alt',
-            'alternative' : 'alt'
+            'alternative' : 'alt',
+            'when'   : 'Super_L'
         }
         return AST('mod_plus_key', [ value[args[0].type], args[1].meta[0] ])
 
@@ -287,6 +318,7 @@ class CoreParser(GenericParser):
     def p_word_phrase(self, args):
         '''
             word_phrase ::= phrase word_repeat
+            word_phrase ::= say word_repeat
         '''
         return args[1]
 

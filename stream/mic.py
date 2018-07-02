@@ -33,8 +33,8 @@ class MyClient(WebSocketClient):
         import audioop
         pa = pyaudio.PyAudio()
         sample_rate = self.byterate
-        stream = None 
-        
+        stream = None
+
         while stream is None:
             try:
                 # try adjusting this if you want fewer network packets
@@ -63,13 +63,13 @@ class MyClient(WebSocketClient):
                 global fatal_error
                 fatal_error = True
                 sys.exit(0)
-     
+
         def mic_to_ws():  # uses stream
             try:
                 print >> sys.stderr, "\nLISTENING TO MICROPHONE"
                 last_state = None
                 while True:
-                    data = stream.read(self.chunk)
+                    data = stream.read(self.chunk, exception_on_overflow=False)
                     if self.audio_gate > 0:
                         rms = audioop.rms(data, 2)
                         if rms < self.audio_gate:
@@ -125,7 +125,7 @@ class MyClient(WebSocketClient):
             print >> sys.stderr, "Received error from server (status %d)" % response['status']
             if 'message' in response:
                 print >> sys.stderr, "Error message:",  response['message']
-            
+
             global reconnect_mode
             if reconnect_mode:
                 import time
