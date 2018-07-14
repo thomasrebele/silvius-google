@@ -106,19 +106,20 @@ class MyClient(WebSocketClient):
         response = json.loads(str(m))
         #print >> sys.stderr, "RESPONSE:", response
         #print >> sys.stderr, "JSON was:", m
+        #print(self.show_hypotheses)
         if response['status'] == 0:
             if 'result' in response:
                 trans = response['result']['hypotheses'][0]['transcript']
                 if response['result']['final']:
                     if self.show_hypotheses:
-                        print >> sys.stderr, '\r%s' % trans.replace("\n", "\\n")
-                    print '%s' % trans.replace("\n", "\\n")  # final result!
-                    sys.stdout.flush()
+                        print '\r%s' % trans.replace("\n", "\\n")
+                    else:
+                        print '%s' % trans.replace("\n", "\\n")  # final result!
                 elif self.show_hypotheses:
                     print_trans = trans.replace("\n", "\\n")
-                    if len(print_trans) > 80:
-                        print_trans = "... %s" % print_trans[-76:]
-                    print >> sys.stderr, '\r%s' % print_trans,
+                    #if len(print_trans) > 80:
+                    #    print_trans = "... %s" % print_trans[-76:]
+                    print '\r%s' % print_trans,
             if 'adaptation_state' in response:
                 if self.save_adaptation_state_filename:
                     print >> sys.stderr, "Saving adaptation state to %s" % self.save_adaptation_state_filename
@@ -131,9 +132,9 @@ class MyClient(WebSocketClient):
 
             global reconnect_mode
             if reconnect_mode:
-                import time
                 print >> sys.stderr, "Sleeping for five seconds before reconnecting"
                 time.sleep(5)
+        sys.stdout.flush()
 
 
     def closed(self, code, reason=None):
