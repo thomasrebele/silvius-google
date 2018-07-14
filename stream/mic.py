@@ -5,8 +5,11 @@ import argparse
 from ws4py.client.threadedclient import WebSocketClient
 import threading
 import sys
+import os
 import urllib
 import json
+import signal
+import time
 
 reconnect_mode = False
 fatal_error = False
@@ -178,13 +181,20 @@ def run(args, content_type, path):
     ws.connect()
     #result = ws.get_full_hyp()
     #print result.encode('utf-8')
+
     ws.run_forever()
 
+
+def exit(*args):
+    os._exit(0)
+
+
 def main():
-    try:
-        setup()
-    except KeyboardInterrupt:
-        print >> sys.stderr, "\nexiting..."
+    threading.Thread(target=setup).start()
+
+    while True:
+        time.sleep(1)
+        signal.signal(signal.SIGINT, exit)
 
 if __name__ == "__main__":
     main()
